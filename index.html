@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="login-page" class="page active">
+            <div class="card">
+                <h1>Voting System</h1>
+                <div class="form-group">
+                    <label for="pin">Enter Invigilator PIN</label>
+                    <input type="password" id="pin" placeholder="Enter PIN">
+                </div>
+                <button id="login-btn" class="btn primary">Login</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page">
+            <div class="card">
+                <h1>Dashboard</h1>
+                <div class="dashboard-buttons">
+                    <button id="register-candidate-btn" class="btn primary">Register Candidate</button>
+                    <button id="start-voting-btn" class="btn success">Start Voting</button>
+                    <button id="stop-voting-btn" class="btn danger" disabled>Stop Voting</button>
+                    <button id="results-btn" class="btn info" disabled>Results</button>
+                </div>
+                <div id="candidates-list" class="candidates-container">
+                    <h2>Registered Candidates</h2>
+                    <div class="candidates-grid">
+                        <!-- Candidates will be displayed here -->
+                    </div>
+                </div>
+                <button id="logout-btn" class="btn secondary">Logout</button>
+            </div>
+        </div>
+
+        <!-- Candidate Registration Page -->
+        <div id="candidate-registration-page" class="page">
+            <div class="card">
+                <h1>Register Candidate</h1>
+                <div class="form-group">
+                    <label for="candidate-name">Name</label>
+                    <input type="text" id="candidate-name" placeholder="Enter candidate name">
+                </div>
+                <div class="form-group">
+                    <label for="candidate-year">Year</label>
+                    <select id="candidate-year">
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="candidate-semester">Semester</label>
+                    <select id="candidate-semester">
+                        <option value="2">4th Semester</option>
+                        <option value="2">5th Semester</option>
+                        <option value="2">6th Semester</option>
+                        <option value="2">7th Semester</option>
+                        <option value="2">8th Semester</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="register-candidate-submit" class="btn primary">Register</button>
+                    <button id="back-to-dashboard" class="btn secondary">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voting Panel Page -->
+        <div id="voting-panel-page" class="page">
+            <div class="card">
+                <h1>Voting Panel</h1>
+                <div id="voter-registration" class="voter-registration">
+                    <h2>Voter Registration</h2>
+                    <div class="form-group">
+                        <label for="voter-name">Name</label>
+                        <input type="text" id="voter-name" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="voter-year">Year</label>
+                        <select id="voter-year">
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="voter-pin">Invigilator PIN</label>
+                        <input type="password" id="voter-pin" placeholder="Enter invigilator PIN">
+                    </div>
+                    <button id="verify-voter" class="btn primary">Verify</button>
+                </div>
+                <div id="voting-area" class="voting-area hidden">
+                    <h2>Select a Candidate</h2>
+                    <div id="voting-candidates" class="voting-candidates">
+                        <!-- Candidates for voting will be displayed here -->
+                    </div>
+                </div>
+                <button id="back-to-dashboard-from-voting" class="btn secondary">Back to Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="results-page" class="page">
+            <div class="card">
+                <h1>Election Results</h1>
+                <div id="top-candidates" class="top-candidates">
+                    <h2>Top 3 Candidates</h2>
+                    <div id="winners-podium" class="winners-podium">
+                        <!-- Top 3 candidates will be displayed here -->
+                    </div>
+                </div>
+                <div id="all-results" class="all-results">
+                    <h2>All Results</h2>
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Year</th>
+                                <th>Semester</th>
+                                <th>Votes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Results will be displayed here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="button-group">
+                    <button id="download-pdf" class="btn primary">Download Results PDF</button>
+                    <button id="back-to-dashboard-from-results" class="btn secondary">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for confirmation and messages -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modal-title">Title</h2>
+                <p id="modal-message">Message</p>
+                <div class="modal-buttons">
+                    <button id="modal-confirm" class="btn primary">Confirm</button>
+                    <button id="modal-cancel" class="btn secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
